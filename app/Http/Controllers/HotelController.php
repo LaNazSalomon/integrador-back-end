@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\HotelRequest;
 use App\Models\Hotel;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 

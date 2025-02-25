@@ -131,6 +131,26 @@ return [
     ],
 
     /*
+    | -------------------------------------------------------------------------
+    | Integraremos mongo DB
+    |--------------------------------------------------------------------------
+    */
+
+    'connections' => [
+    'integrador' => [
+        'driver' => 'mongodb',
+        'host' => env('MONGO_DB_HOST', 'localhost'),
+        'port' => env('MONGO_DB_PORT', 27017),
+        'database' => env('MONGO_DB_DATABASE', 'simulador_hospedaje'),
+        'username' => env('MONGO_DB_USERNAME'),
+        'password' => env('MONGO_DB_PASSWORD'),
+        'options'  => [
+            'database' => env('MONGO_DB_DATABASE', 'simulador_hospedaje'), // Aquí colocas el nombre de la base de datos
+        ],
+    ],
+],
+
+    /*
     |--------------------------------------------------------------------------
     | Redis Databases
     |--------------------------------------------------------------------------
@@ -147,7 +167,7 @@ return [
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
+            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_') . '_database_'),
         ],
 
         'default' => [

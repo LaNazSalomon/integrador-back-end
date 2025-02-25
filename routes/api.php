@@ -4,6 +4,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HotelController;
+use App\Http\Controllers\ReservationDetailController;
 use App\Http\Controllers\RoomController;
 use Illuminate\Support\Facades\Route;
 
@@ -24,4 +25,7 @@ Route::middleware('jwt.auth')->group(function () {
 
     //Administracion para las habitaciones, las habitaciones dependen de los hoteles
     Route::apiResource('rooms', RoomController::class);
+
+    //Administracion de las reservas
+    Route::apiResource('reservations', ReservationDetailController::class);
 });

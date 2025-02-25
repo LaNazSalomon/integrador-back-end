@@ -8,7 +8,7 @@ class Reservation extends Model
 {
     protected $fillable = [
         'cliente_id',
-        'room_id',
+        'json_id',
         'check_in',
         'check_out'
     ];
