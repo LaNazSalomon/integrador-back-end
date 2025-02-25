@@ -65,7 +65,7 @@ class AuthController extends Controller
 
     public function update(UpdateUserRequest $request)
     {
-        //Obtenemos el usuario autenticado
+        //Obtenemos el usuario autenticado pero esta madre no se calla la pta bocaaaaaaaaa
         $user = auth()->user();
 
         //Solo actualizar estos datos, la conreaseña es aparte, esto para encriptarla
@@ -74,7 +74,6 @@ class AuthController extends Controller
         //Si el usuario manda la contraseña que se encripte con la funcion que ya trae laravel
         if ($request->filled('password')) {
             $data['password'] = Hash::make($request['password']);
-
         }
 
         //Hacemos la actualizacion

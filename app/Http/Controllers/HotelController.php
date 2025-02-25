@@ -17,7 +17,7 @@ class HotelController extends Controller
         $hotel = Hotel::where('user_id', $user_id)
         -> get();
 
-        return response() -> json([$hotel]);
+        return response() -> json($hotel);
     }
 
 
