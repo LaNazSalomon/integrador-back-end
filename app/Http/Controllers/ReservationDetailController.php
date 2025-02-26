@@ -2,12 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Business\Interfaces\DatesInterface;
+use App\Http\Requests\ReservationRequest;
 use App\Models\Reservation;
 use App\Models\ReservationDetail;
-use Illuminate\Http\Request;
 
 class ReservationDetailController extends Controller
 {
+
+    //Usaremos el ocntructor para inyeccion de depenencias y no tener que declarar las clases en
+    //cada funcion que usemos
+    public function __construct(protected DatesInterface $dates){}
+
     public function index()
     {
         $reservaciones = ReservationDetail::all();
@@ -15,32 +21,24 @@ class ReservationDetailController extends Controller
         return response()->json($reservaciones);
     }
 
-    public function store(Request $request)
+    public function store(ReservationRequest $request)
     {
-        // Validar los datos recibidos
-        $validated = $request->validate([
-            'rooms' => 'required|array',
-            'fecha_reserva' => 'required|date',
-            'status' => 'required|string',
-            'payment_method' => 'required|string',
-            'people_count' => 'required|integer',
-        ]);
-
-        // Crear un nuevo detalle de reserva con los datos validados
-        $reservationDetail = ReservationDetail::create($validated);
+       // Crear un nuevo detalle de reserva con los datos validados
+       $data = $request ->validated();
+       $data += $this->dates->BusyDays($request->input('check_in'),$request->input('check_out'));
+       dd($data);
+        $reservationDetail = ReservationDetail::create($data);
         $id = $reservationDetail->_id;
-        $this->saveReservation($id, $request->input('cliente_id'), $request->input('check_in'), $request->input('check_out'));
+        $this->saveReservation($request->input('cliente_id'), $id);
 
         return response()->json($reservationDetail->_id, 201);
     }
 
-    private function saveReservation($id, $client_id, $check_in, $check_out)
+    private function saveReservation($customer_id, $id)
     {
         Reservation::create([
-            'cliente_id' => $client_id,
+            'cliente_id' => $customer_id,
             'json_id' => $id,
-            'check_in' => $check_in,
-            'check_out' => $check_out
         ]);
     }
 }
