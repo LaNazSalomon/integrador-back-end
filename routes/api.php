@@ -3,6 +3,7 @@
 //Aqui declararemos todas las rutas de la App
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\HotelController;
 use App\Http\Controllers\ReservationDetailController;
 use App\Http\Controllers\RoomController;
@@ -28,4 +29,8 @@ Route::middleware('jwt.auth')->group(function () {
 
     //Administracion de las reservas
     Route::apiResource('reservations', ReservationDetailController::class);
+
+    //Administracion de los huespedes
+    Route::get('customers',[CustomerController::class,'getCustomers']);
+    Route::post('customers/create',[CustomerController::class, 'create']);
 });

@@ -7,10 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 class Customer extends Model
 {
     protected $fillable = [
+        'user_id',
         'name',
         'last_name',
         'email',
-        'password',
+    ];
+
+    protected $hidden = [
+        'created_at',
+        'updated_at'
     ];
 
     public function reservation(){
