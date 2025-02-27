@@ -25,11 +25,15 @@ class ReservationDetailController extends Controller
     {
        // Crear un nuevo detalle de reserva con los datos validados
        $data = $request ->validated();
-       $data += $this->dates->BusyDays($request->input('check_in'),$request->input('check_out'));
-       dd($data);
+
+       //En esta parte hacemos un arreglo con las fechas de entrada y salida
+       //gracias al objeto inyectado
+       $data['busy_days']= $this->dates->BusyDays($request->input('check_in'),$request->input('check_out'));
+
         $reservationDetail = ReservationDetail::create($data);
         $id = $reservationDetail->_id;
-        $this->saveReservation($request->input('cliente_id'), $id);
+        $this->saveReservation($request->input('customer_id'), $id);
+        //dd($data);
 
         return response()->json($reservationDetail->_id, 201);
     }

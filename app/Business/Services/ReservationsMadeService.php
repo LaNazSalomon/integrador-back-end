@@ -19,4 +19,8 @@ class ReservationsMadeService implements DatesInterface
 
         return $dates;
     }
+
+    public function BusyDates($type, $dates){
+
+    }
 }

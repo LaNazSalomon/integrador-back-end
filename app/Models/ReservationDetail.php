@@ -15,10 +15,10 @@ class ReservationDetail extends Model
         'reservation_date',
         'check_in',
         'check_out',
-        'busy_days',
         'status',
         'payment_method',
         'people_count',
+        'busy_days',
     ];
 
     protected $casts = [

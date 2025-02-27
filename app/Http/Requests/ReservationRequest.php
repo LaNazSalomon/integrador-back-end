@@ -27,7 +27,7 @@ class ReservationRequest extends ApiFormRequest
             'reservation_date' => 'required|date',
             'check_in' => 'required|date|after:reservation_date',
             'check_out' => 'required|date|after:check_in',
-            'busy_days' => 'array|min:1',
+            'busy_days' => 'array|min:1|unique:reservation_details,busy_days',
             'busy_days.*' => 'date',
             'status' => 'required|string|in:pending,confirmed,canceled',
             'payment_method' => 'required|string|in:credit_card,debit_card,paypal',
