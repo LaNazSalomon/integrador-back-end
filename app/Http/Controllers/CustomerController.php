@@ -4,15 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CustomerRequest;
 use App\Models\Customer;
-use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 
 class CustomerController extends Controller
 {
-    public function getCustomers(){
+    public function getCustomers($hotel_id){
         //Devolvemos directamente todos los usuarios que peretenezcan a el usuario
-        $customers = Customer::where("user_id", "=", auth() ->id())
+        $customers = Customer::where("hotel_id", "=", $hotel_id)
         ->get();
 
         return response() -> json($customers);

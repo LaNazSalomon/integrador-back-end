@@ -21,7 +21,7 @@ class AuthController extends Controller
         $datosValidados = $request->validated();
 
         //Merge de datos, los del modelo toman los del areglo de datos ya validados
-        $user = User::create([
+        User::create([
             'name' => $datosValidados['name'],
             'email' => $datosValidados['email'],
             'password' => Hash::make($datosValidados['password'])
@@ -45,7 +45,7 @@ class AuthController extends Controller
             //Intentando que se cree, esto devuievle un bool si se pudo o no
             //El metodo attempt es de jwt
             if (!$token = JWTAuth::attempt($credenciales)) {
-                return response()->json(['error' => 'El correo o la contraseña son invalidos']);
+                return response()->json(['error' => 'El correo o la contraseña son invalidos'], Response::HTTP_UNAUTHORIZED);
             }
         } catch (JWTException) {
             return response()->json(['message' => 'No se pudo validar el token'], Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -53,7 +53,7 @@ class AuthController extends Controller
 
         //Si se logro crear el token es que no quedo dentro del if ni genero algun erro para ser
         //cachado, entonces el paso siguiente es devolverlo
-        return response()->json(['token' => $token]);
+        return response()->json(['token' => $token, 'usuario' => auth()->user()]);
     }
 
     //Funcion para retornar los datos que tiene el token
@@ -65,7 +65,7 @@ class AuthController extends Controller
 
     public function update(UpdateUserRequest $request)
     {
-        //Obtenemos el usuario autenticado pero esta madre no se calla la pta bocaaaaaaaaa
+        //Obtenemos el usuario autenticado
         $user = auth()->user();
 
         //Solo actualizar estos datos, la conreaseña es aparte, esto para encriptarla

@@ -21,6 +21,8 @@ class ReservationsMadeService implements DatesInterface
     }
 
     public function BusyDates($type, $dates){
-
+        //Crearemos una funcion que recibira el tipo de habitacion que es esta buscando
+        //Un arreglo con todas las fechas de reserva de ese tipo de habitacion en ese hotel
+        //Para saber si esta disponible o no alguna habitacion
     }
 }

@@ -30,6 +30,9 @@ class ReservationDetailController extends Controller
        //gracias al objeto inyectado
        $data['busy_days']= $this->dates->BusyDays($request->input('check_in'),$request->input('check_out'));
 
+
+
+
         $reservationDetail = ReservationDetail::create($data);
         $id = $reservationDetail->_id;
         $this->saveReservation($request->input('customer_id'), $id);
