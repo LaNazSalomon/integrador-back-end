@@ -12,10 +12,8 @@ class HotelController extends Controller
 
     //Devuelve solo los hoteles que son del usuario actual
     public function index(){
-        $user_id = auth() -> id();
-        $hotel = Hotel::where('user_id', $user_id)
+        $hotel = Hotel::where('user_id','=', auth() -> id())
         -> get();
-
         return response() -> json($hotel);
     }
 

@@ -21,7 +21,7 @@ class CustomerRequest extends ApiFormRequest
     public function rules(): array
     {
         return [
-            'user_id'   => 'required|integer|exists:users,id',
+            'hotel_id'   => 'required|integer|exists:users,id',
             'name'      => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email'     => 'required|string|email|max:255|unique:customers,email,NULL,id,user_id,' . $this->user_id,
