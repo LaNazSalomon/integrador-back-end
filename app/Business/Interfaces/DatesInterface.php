@@ -7,5 +7,5 @@
 
     //Esta funcion permitira comparar fechas para saber si las habitaciones estan ocupadas
     //o no
-    public function BusyDates($type, $dates);
+    public function BusyDates($type, $dates, $hotel_id);
  }

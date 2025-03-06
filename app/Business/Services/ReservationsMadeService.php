@@ -2,6 +2,8 @@
 namespace App\Business\Services;
 
 use App\Business\Interfaces\DatesInterface;
+use App\Models\ReservationDetail;
+use App\Models\Room;
 use Carbon\CarbonPeriod;
 
 class ReservationsMadeService implements DatesInterface
@@ -20,7 +22,13 @@ class ReservationsMadeService implements DatesInterface
         return $dates;
     }
 
-    public function BusyDates($type, $dates){
+    public function BusyDates($type, $dates, $hotel_id){
+        //Primero vamos a la DB relacional por todas las habitaciones que esten en nuestro
+        //Hotel y sean del tipo que quiere reservar el usuario
+        $rooms = Room::where('hotel_id','=',$hotel_id)
+        ->where('type','=',$type)
+        ->pluck('id');
 
+        return $rooms;
     }
 }

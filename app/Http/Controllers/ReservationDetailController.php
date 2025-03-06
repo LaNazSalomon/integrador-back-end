@@ -14,9 +14,11 @@ class ReservationDetailController extends Controller
     //cada funcion que usemos
     public function __construct(protected DatesInterface $dates){}
 
-    public function index()
+    public function show($id)
     {
-        $reservaciones = ReservationDetail::all();
+        $reservaciones = ReservationDetail::all()
+        ->
+        where("hotel_id", "=", $id);
 
         return response()->json($reservaciones);
     }
@@ -26,9 +28,15 @@ class ReservationDetailController extends Controller
        // Crear un nuevo detalle de reserva con los datos validados
        $data = $request ->validated();
 
+
        //En esta parte hacemos un arreglo con las fechas de entrada y salida
        //gracias al objeto inyectado
        $data['busy_days']= $this->dates->BusyDays($request->input('check_in'),$request->input('check_out'));
+
+       //Iremos a nuestro metodo para saber si las habitaciones que queremos estaran disponibles
+       $muestra = $this->dates->BusyDates('Individual',$data['busy_days'],1);
+
+        dd($muestra);
 
         $reservationDetail = ReservationDetail::create($data);
         $id = $reservationDetail->_id;

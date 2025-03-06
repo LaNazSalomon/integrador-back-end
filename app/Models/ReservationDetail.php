@@ -10,6 +10,7 @@ class ReservationDetail extends Model
 
      // Definir los campos que serán accesibles
      protected $fillable = [
+        'hotel_id',
         'customer_id',
         'rooms',  // Este campo sera un array de habitaciones
         'reservation_date',
