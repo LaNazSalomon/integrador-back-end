@@ -31,6 +31,6 @@ Route::middleware('jwt.auth')->group(function () {
     Route::apiResource('reservations', ReservationDetailController::class);
 
     //Administracion de los huespedes
-    Route::get('customers',[CustomerController::class,'getCustomers']);
+    Route::get('/customers/{id}',[CustomerController::class,'getCustomers']);
     Route::post('customers/create',[CustomerController::class, 'create']);
 });

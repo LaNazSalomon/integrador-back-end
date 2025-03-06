@@ -21,19 +21,19 @@ class CustomerRequest extends ApiFormRequest
     public function rules(): array
     {
         return [
-            'hotel_id'   => 'required|integer|exists:users,id',
+            'hotel_id'   => 'required|integer|exists:hotels,id',
             'name'      => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email'     => 'required|string|email|max:255|unique:customers,email,NULL,id,user_id,' . $this->user_id,
+            'email'     => 'required|string|email|max:255|unique:customers,email,NULL,id,hotel_id,' . $this->hotel_id,
         ];
     }
 
     public function messages()
     {
         return [
-            'user_id.required'   => 'El ID de usuario es obligatorio.',
-            'user_id.integer'    => 'El ID de usuario debe ser un número entero.',
-            'user_id.exists'     => 'El usuario no existe en el sistema.',
+            'hotel_id.required'   => 'El ID del hotel es obligatorio.',
+            'hotel_id.integer'    => 'El ID del hotel debe ser un número entero.',
+            'hotel_id.exists'     => 'El hotel no existe en el sistema.',
 
             'name.required'      => 'El nombre es obligatorio.',
             'name.string'        => 'El nombre debe ser un texto.',
@@ -47,7 +47,7 @@ class CustomerRequest extends ApiFormRequest
             'email.string'       => 'El correo electrónico debe ser un texto.',
             'email.email'        => 'El correo electrónico debe ser válido.',
             'email.max'          => 'El correo electrónico no debe superar los 255 caracteres.',
-            'email.unique'       => 'Este correo ya está registrado para el mismo usuario.',
+            'email.unique'       => 'Este correo ya está registrado.',
         ];
     }
 }

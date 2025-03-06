@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Customer extends Model
 {
     protected $fillable = [
-        'user_id',
+        'hotel_id',
         'name',
         'last_name',
         'email',
@@ -20,5 +20,9 @@ class Customer extends Model
 
     public function reservation(){
         return $this ->hasMany(Reservation::class);
+    }
+
+    public function hotel(){
+        return $this -> belongsTo(Hotel::class);
     }
 }
