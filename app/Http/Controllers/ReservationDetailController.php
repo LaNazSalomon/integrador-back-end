@@ -38,6 +38,8 @@ class ReservationDetailController extends Controller
 
         dd($muestra);
 
+
+
         $reservationDetail = ReservationDetail::create($data);
         $id = $reservationDetail->_id;
         $this->saveReservation($request->input('customer_id'), $id);

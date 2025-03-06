@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 
 class HotelRequest extends ApiFormRequest
 {
@@ -22,7 +23,16 @@ class HotelRequest extends ApiFormRequest
     {
         return [
             'user_id' => 'required|exists:users,id',
-            'name' => 'required|string|min:3|max:255',
+            'name'    => [
+                'required',
+                'string',
+                'min:3',
+                'max:255',
+                Rule::unique('hotels')
+                    ->where(function ($query) {
+                        return $query->where('user_id', $this->user_id);
+                    }),
+            ],
         ];
     }
 
@@ -30,10 +40,12 @@ class HotelRequest extends ApiFormRequest
     {
         return [
             'user_id.required' => 'El usuario es obligatorio.',
-            'user_id.exists' => 'El usuario no existe en la base de datos.',
-            'name.required' => 'El nombre del hotel es obligatorio.',
-            'name.min' => 'El nombre del hotel debe tener al menos 3 caracteres.',
-            'name.max' => 'El nombre del hotel no puede superar los 255 caracteres.',
+            'user_id.exists'   => 'El usuario no existe en la base de datos.',
+            'name.required'    => 'El nombre del hotel es obligatorio.',
+            'name.string'      => 'Debe ser tipo string',
+            'name.min'         => 'El nombre del hotel debe tener al menos 3 caracteres.',
+            'name.max'         => 'El nombre del hotel no puede superar los 255 caracteres.',
+            'name.unique'      => 'Ya existe un hotel con ese nombre para este usuario.',
         ];
     }
 }

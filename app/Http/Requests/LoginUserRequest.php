@@ -21,7 +21,7 @@ class LoginUserRequest extends ApiFormRequest
     {
         return [
             'email' => 'required|string|email|max:100',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => 'required|string|min:8',
 
         ];
     }
@@ -34,7 +34,6 @@ class LoginUserRequest extends ApiFormRequest
                 'email.email' => 'Debe ser un correo válido.',
                 'password.required' => 'La contraseña es obligatoria.',
                 'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
-                'password.confirmed' => 'Las contraseñas no coinciden.',
             ];
     }
 }

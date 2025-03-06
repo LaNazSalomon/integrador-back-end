@@ -12,10 +12,8 @@ class HotelController extends Controller
 
     //Devuelve solo los hoteles que son del usuario actual
     public function index(){
-        $user_id = auth() -> id();
-        $hotel = Hotel::where('user_id', $user_id)
+        $hotel = Hotel::where('user_id','=', auth() -> id())
         -> get();
-
         return response() -> json($hotel);
     }
 
@@ -27,10 +25,10 @@ class HotelController extends Controller
     public function store(HotelRequest $request){
         //Intentarmos crear un hotel
         try{
-            $hotel = Hotel::create($request -> validated());
-            return response() -> json($hotel);
+            Hotel::create($request -> validated());
+            return response() -> json(['message' => 'Hotel creado exitosamente.']);
         }catch(ValidationException $e){
-            return response() -> json(['error' => $e -> errors()], Response::HTTP_UNPROCESSABLE_ENTITY);
+            return response() -> json(['error' => 'Error, intente de nuevo.'], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
     }
