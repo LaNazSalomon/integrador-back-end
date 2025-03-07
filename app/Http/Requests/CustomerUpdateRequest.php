@@ -32,7 +32,7 @@ class CustomerUpdateRequest extends ApiFormRequest
                 'max:255',
                 Rule::unique('customers')->where(function ($query) {
                     return $query->where('hotel_id', $this->hotel_id);
-                })->ignore($this->route('customer')) // Asume que la ruta tiene parámetro 'customer'
+                })->ignore($this->route('customercustom')) // Asume que la ruta tiene parámetro 'customer'
             ],
         ];
     }

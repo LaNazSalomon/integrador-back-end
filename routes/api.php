@@ -31,10 +31,10 @@ Route::middleware('jwt.auth')->group(function () {
     Route::apiResource('reservations', ReservationDetailController::class);
 
     //Administracion de los huespedes
-    Route::apiResource('customers', CustomerController::class);
+    Route::apiResource('customercustom', CustomerController::class);
 
-    //Route::get('/customers/{id}',[CustomerController::class,'getCustomers']);
-    //Route::get('/customer/{id}',[CustomerController::class,'getCustomer']);
-    //Route::put('customer/update/{id}', [CustomerController::class, 'updateCustomer']);
-    //Route::post('customers/create',[CustomerController::class, 'create']);
+    Route::get('customers/{id}',[CustomerController::class,'getCustomers']);
+    Route::get('customer/{id}',[CustomerController::class,'getCustomer']);
+    //Route::put('/customer/update/{id}', [CustomerController::class, 'update']);
+    Route::post('customers/create',[CustomerController::class, 'create']);
 });

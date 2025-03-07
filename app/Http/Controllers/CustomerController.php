@@ -13,7 +13,8 @@ class CustomerController extends Controller
 {
 
 
-    public function show($hotel_id)
+    //Muestra todos los huedespdes del hotel
+    public function getCustomers($hotel_id)
     {
         //Devolvemos todos los huespedes del hotel y verificamos que el hotel sea del usuario
         $customers = Customer::join('hotels', 'customers.hotel_id', 'hotels.id')
@@ -27,7 +28,7 @@ class CustomerController extends Controller
     }
 
     //Funcion para crear clientes
-    public function store(CustomerRequest $request)
+    public function create(CustomerRequest $request)
     {
         //Intenrartemos crear a un cliente
         try {
@@ -38,23 +39,24 @@ class CustomerController extends Controller
         }
     }
 
-    public function edit($id)
+    //Muestra un solo huesped
+    public function getCustomer($id)
     {
         $customer = Customer::where('id', $id)
             ->get();
         return response()->json($customer);
     }
 
-    public function update(CustomerUpdateRequest $request, Customer $customer)
+
+    //Actualiza
+    public function update(CustomerUpdateRequest $request, Customer $customercustom)
     {
         try {
-
-            $data = $request->only('name', 'last_name', 'email');
-            $customer -> update($data);
-
-            return response()->json(['response' => 'Actualizado correctamente'], Response::HTTP_OK);
+            $data = $request -> validated();
+            $customercustom->update($data);
+            return response()->json(['response' => 'El huésped se actualizó correctamente.'], Response::HTTP_OK);
         } catch (Exception $e) {
-            return response()->json(['error' => 'No se pudo actualizar'], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json(['error' => 'No se pudo actualizar' . $e], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }
