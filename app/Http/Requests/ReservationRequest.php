@@ -21,6 +21,7 @@ class ReservationRequest extends ApiFormRequest
     public function rules(): array
     {
         return [
+            'hotel_id' => 'required|integer|exists:hotels,id',
             'customer_id' => 'required|integer|exists:customers,id',
             'rooms' => 'required|array|min:1',
             'rooms.*' => 'integer|exists:rooms,id',
@@ -38,6 +39,8 @@ class ReservationRequest extends ApiFormRequest
     public function messages()
     {
         return [
+            'hotel_id.required' => 'El campo de hotel es obligatorio.',
+            'hotel_id.exists' => 'El hotel no existe en nuestra base de datos.',
             'customer_id.required' => 'El campo de cliente es obligatorio.',
             'customer_id.exists' => 'El cliente no existe en nuestra base de datos.',
             'rooms.required' => 'El campo de habitaciones es obligatorio.',

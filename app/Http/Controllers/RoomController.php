@@ -6,7 +6,6 @@ use App\Http\Requests\RoomRequest;
 use App\Http\Requests\UpdateRoomRequest;
 use App\Models\Hotel;
 use App\Models\Room;
-use App\Models\User;
 use Dotenv\Exception\ValidationException;
 use Exception;
 use Illuminate\Http\Request;
@@ -60,6 +59,7 @@ class RoomController extends Controller
         //Intentaremos actualizar
         try {
             $data = $request->validated();
+            dd($room);
             $room->update($data);
             return response()->json(['message' => 'Actualizado correctamente', 'room' => $room], Response::HTTP_OK);
         } catch (Exception $e) {
