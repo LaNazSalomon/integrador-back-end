@@ -26,6 +26,8 @@ Route::middleware('jwt.auth')->group(function () {
 
     //Administracion para las habitaciones, las habitaciones dependen de los hoteles
     Route::apiResource('rooms', RoomController::class);
+    Route::get('get-room/{id}',[RoomController::class,'getRoom']);
+
 
     //Administracion de las reservas
     Route::apiResource('reservations', ReservationDetailController::class);

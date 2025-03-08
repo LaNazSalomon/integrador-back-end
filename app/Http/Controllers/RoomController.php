@@ -25,7 +25,7 @@ class RoomController extends Controller
         //Para saber despues de que registro continua
         $despuesDe = $ultimaPagina * $registrosPorPagina;
 
-        //Mostraremos solo las habitaciones del usuyario que esta logeado
+        //Mostraremos solo las habitaciones del usuario que esta logeado
         //Hacemos un paginado
         $rooms = Room::skip($despuesDe)->take($registrosPorPagina)
             ->where(function ($query) use ($hotel_id) {
@@ -47,7 +47,7 @@ class RoomController extends Controller
         try {
             $data = $request->validated();
             Room::create($data);
-            return response()->json(['message' => 'Habitacion creada correctamente', 'room' => $data]);
+            return response()->json(['message' => 'Habitacion creada correctamente', 'room' => $data], Response::HTTP_OK);
         } catch (ValidationException $e) {
             return response()->json(['error' => 'Ha ocurrido un error ' . $e], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -65,5 +65,13 @@ class RoomController extends Controller
         } catch (Exception $e) {
             return response()->json(['error' => $e], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    //Funcion para obtener una sola habitacion
+    public function getRoom($id){
+        $room = Room::where('id', $id)
+        ->get();
+
+        return response() -> json($room);
     }
 }
