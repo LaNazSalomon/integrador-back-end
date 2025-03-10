@@ -71,4 +71,14 @@ class RoomController extends Controller
 
         return response() -> json($room);
     }
+
+    //Para obtener todas las habitaciones, bueno solo obtendermos su tipo
+    //TODO: Buscar una mejor implementacion
+    public function getAllRooms($hotel){
+        $types = Room::where('hotel_id', $hotel)
+        ->pluck('type')
+        ->unique();
+
+        return response() -> json(['types' => $types]);
+    }
 }

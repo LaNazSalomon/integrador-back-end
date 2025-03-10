@@ -7,6 +7,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\HotelController;
 use App\Http\Controllers\ReservationDetailController;
 use App\Http\Controllers\RoomController;
+use App\Models\Reservation;
 use Illuminate\Support\Facades\Route;
 
 //Ruta para registrarse en la pagina y tambien la de inicio de sesion
@@ -27,14 +28,19 @@ Route::middleware('jwt.auth')->group(function () {
     //Administracion para las habitaciones, las habitaciones dependen de los hoteles
     Route::apiResource('rooms', RoomController::class);
     Route::get('get-room/{id}',[RoomController::class,'getRoom']);
+    Route::get('rooms/get-all-rooms/{hotel}',[RoomController::class,'getAllRooms']);
 
 
     //Administracion de las reservas
     Route::apiResource('reservations', ReservationDetailController::class);
+    //Funcion para buscar por tipo de habitacion pero en las reservas, esto para
+    //Saber que habitaciones podemos usar
+    Route::post('reservation/find-room',[ReservationDetailController::class,'findRoomInReservations']);
 
     //Administracion de los huespedes
     Route::apiResource('customercustom', CustomerController::class);
 
+    Route::post('customer/find-by-email',[CustomerController::class,'findByEmail']);
     Route::get('customers/{id}',[CustomerController::class,'getCustomers']);
     Route::get('customer/{id}',[CustomerController::class,'getCustomer']);
     //Route::put('/customer/update/{id}', [CustomerController::class, 'update']);
