@@ -1,4 +1,4 @@
-# Usa PHP 8.2 en lugar de 8.1
+# Usa PHP 8.2 como imagen base
 FROM php:8.2-cli
 
 # Instalar dependencias necesarias
@@ -8,6 +8,8 @@ RUN apt-get update && apt-get install -y \
     unzip \
     curl \
     git \
+    nodejs \
+    npm \
     && pecl channel-update pecl.php.net \
     && pecl install mongodb \
     && docker-php-ext-enable mongodb
