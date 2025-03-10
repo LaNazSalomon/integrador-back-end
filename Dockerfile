@@ -1,17 +1,23 @@
-# Usa una imagen base de PHP con FPM
-FROM php:8.1-fpm
+# Usa una imagen de PHP con CLI para que tenga apt-get
+FROM php:8.1-cli
 
 # Instalar dependencias del sistema necesarias para la extensión MongoDB
 RUN apt-get update && apt-get install -y \
     libssl-dev \
     pkg-config \
-    && docker-php-ext-install openssl \
+    unzip \
+    curl \
+    git \
+    && pecl channel-update pecl.php.net \
     && pecl install mongodb \
     && docker-php-ext-enable mongodb
 
 # Configurar el directorio de trabajo
 WORKDIR /app
 COPY . .
+
+# Instalar Composer manualmente si no está disponible en la imagen base
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Instalar dependencias de Laravel y NPM
 RUN composer install --no-dev --optimize-autoloader
@@ -24,8 +30,8 @@ RUN php artisan route:cache
 RUN php artisan view:cache
 RUN php artisan migrate --force
 
-# Exponer el puerto de PHP-FPM
+# Exponer el puerto de PHP
 EXPOSE 9000
 
-# Comando para iniciar PHP-FPM
-CMD ["php-fpm"]
+# Comando para iniciar PHP
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=9000"]
