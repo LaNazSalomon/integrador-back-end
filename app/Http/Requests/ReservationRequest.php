@@ -30,7 +30,7 @@ class ReservationRequest extends ApiFormRequest
             'check_out' => 'required|date|after:check_in',
             'busy_days' => 'array|min:1|unique:reservation_details,busy_days',
             'busy_days.*' => 'date',
-            'status' => 'required|string|in:pending,confirmed,canceled',
+            'status' => 'required|string|in:pending,confirmed,canceled,finalized',
             'payment_method' => 'required|string|in:credit_card,debit_card,paypal',
             'people_count' => 'required|integer|min:1',
         ];

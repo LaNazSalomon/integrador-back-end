@@ -17,28 +17,26 @@ class RoomController extends Controller
     //Funcion para ver todas las habitaciones disponibles con un paginado
     public function show(Request $request, $hotel_id)
     {
-        //Segundo numero es por si no nos mandan nada en la url
-        $registrosPorPagina = $request->query('regirtros', 15);
-        //Guarda la ultima habitacion donde nos quedamos para continmuar en la siguiente pagina
-        //Con la que sigue de esa, empieza en la cero
-        $ultimaPagina = $request->query('utlima', 0);
-        //Para saber despues de que registro continua
-        $despuesDe = $ultimaPagina * $registrosPorPagina;
+        $registrosPorPagina = $request->query('registros', 3);
+        $pagina = $request->query('pagina', 0);
 
-        //Mostraremos solo las habitaciones del usuario que esta logeado
-        //Hacemos un paginado
-        $rooms = Room::skip($despuesDe)->take($registrosPorPagina)
-            ->where(function ($query) use ($hotel_id) {
-                // Verifica si el hotel pertenece al usuario actual
-                if (Hotel::where('id', $hotel_id)->where('user_id', auth()->id())->exists()) {
-                    $query->where('hotel_id', '=', $hotel_id);
-                } else {
-                    // Si no es del usuario, no debería retornar ninguna habitación
-                    $query->whereRaw('1 = 0');  // Esto evita que se muestren resultados
-                }
-            })
-            ->get();
-        return response()->json($rooms);
+        $offset = $pagina * $registrosPorPagina;
+
+        $query = Room::where('hotel_id', $hotel_id)
+                   ->whereHas('hotel', function($q) {
+                       $q->where('user_id', auth()->id());
+                   });
+
+        $total = $query->count();
+
+        $rooms = $query->skip($offset)
+                     ->take($registrosPorPagina)
+                     ->get();
+
+        return response()->json([
+            'rooms' => $rooms,
+            'total' => $total
+        ]);
     }
 
     //Funcion para ingresar habitaciones a la base de datos
@@ -59,7 +57,6 @@ class RoomController extends Controller
         //Intentaremos actualizar
         try {
             $data = $request->validated();
-            dd($room);
             $room->update($data);
             return response()->json(['message' => 'Actualizado correctamente', 'room' => $room], Response::HTTP_OK);
         } catch (Exception $e) {
@@ -73,5 +70,15 @@ class RoomController extends Controller
         ->get();
 
         return response() -> json($room);
+    }
+
+    //Para obtener todas las habitaciones, bueno solo obtendermos su tipo
+    //TODO: Buscar una mejor implementacion
+    public function getAllRooms($hotel){
+        $types = Room::where('hotel_id', $hotel)
+        ->pluck('type')
+        ->unique();
+
+        return response() -> json(['types' => $types]);
     }
 }
