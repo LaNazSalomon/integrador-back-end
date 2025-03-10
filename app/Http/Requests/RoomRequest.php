@@ -26,7 +26,7 @@ class RoomRequest extends ApiFormRequest
             'type' => 'required|string|in:single,double,suite,premium,deluxe,executive,family,king,queen,studio,villa,penthouse',
             'price' => 'required|numeric|min:0',
             'status' => 'required|string|in:available,occupied,maintenance',
-            'description' => 'required|string|min:5'
+            'description' => 'string|min:5'
         ];
     }
 
@@ -53,7 +53,6 @@ class RoomRequest extends ApiFormRequest
             'status.string' => 'El estado debe ser una cadena de texto.',
             'status.in' => 'El estado debe ser uno de los siguientes: available, occupied, maintenance.',
 
-            'description.required' => 'La descripción es obligatoria.',
             'description.string' => 'La descripción debe ser una cadena de texto.',
             'description.min' => 'La descripción debe ser de un mínimo de 5 caracteres.',
 

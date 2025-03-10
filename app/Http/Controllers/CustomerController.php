@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CustomerRequest;
 use App\Http\Requests\CustomerUpdateRequest;
+use App\Http\Requests\FindCustomerByIDRequest;
 use App\Models\Customer;
 use Exception;
 use Illuminate\Validation\ValidationException;
@@ -52,11 +53,25 @@ class CustomerController extends Controller
     public function update(CustomerUpdateRequest $request, Customer $customercustom)
     {
         try {
-            $data = $request -> validated();
+            $data = $request->validated();
             $customercustom->update($data);
             return response()->json(['response' => 'El huésped se actualizó correctamente.'], Response::HTTP_OK);
         } catch (Exception $e) {
             return response()->json(['error' => 'No se pudo actualizar' . $e], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    //Buscaremos un usuario por el correo electronico
+    public function findByEmail(FindCustomerByIDRequest $request)
+    {
+        try {
+            $customer = Customer::where('hotel_id', $request->input('hotel'))
+                ->where('email', $request->input('email'))
+                ->get();
+
+            return response()->json($customer, Response::HTTP_ACCEPTED);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Ha ocurrido algo inesperado'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }
