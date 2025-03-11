@@ -47,8 +47,8 @@ class AuthController extends Controller
             if (!$token = JWTAuth::attempt($credenciales)) {
                 return response()->json(['error' => 'El correo o la contraseña son invalidos'], Response::HTTP_UNAUTHORIZED);
             }
-        } catch (JWTException) {
-            return response()->json(['message' => 'No se pudo validar el token'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        } catch (JWTException $e) {
+            return response()->json(['message' => 'No se pudo validar el token: '.$e], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         //Si se logro crear el token es que no quedo dentro del if ni genero algun erro para ser
