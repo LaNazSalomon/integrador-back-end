@@ -47,8 +47,17 @@ Route::middleware('jwt.auth')->group(function () {
     Route::post('customers/create',[CustomerController::class, 'create']);
 });
 
-Route::get('/test-db', function () {
-    return response()->json([
-        'users' => \DB::table('users')->count()
-    ]);
+Route::get('/test-connection', function () {
+    try {
+        \DB::connection()->getPdo();
+        return response()->json([
+            'status' => 'success',
+            'database' => \DB::connection()->getDatabaseName(),
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage(),
+        ]);
+    }
 });
