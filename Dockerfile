@@ -1,4 +1,4 @@
-# Usa PHP 8.2 con FPM como base para mejor rendimiento en producción
+# Usa PHP 8.2 con FPM como base
 FROM php:8.2-fpm
 
 # Instalar dependencias del sistema y PHP necesarias
@@ -19,27 +19,35 @@ RUN apt-get update && apt-get install -y \
 
 # Instalar Node.js y NPM desde NodeSource
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
-    && apt-get install -y nodejs
+    && apt-get install -y nodejs && \
+    ln -s /usr/bin/node /usr/local/bin/node && \
+    ln -s /usr/bin/npm /usr/local/bin/npm
+
+# Verificar versiones instaladas
+RUN node -v && npm -v
 
 # Configurar el directorio de trabajo
 WORKDIR /app
 
-# Copiar archivos del proyecto al contenedor
+# Copiar archivos del proyecto
 COPY . .
 
 # Instalar Composer manualmente si no está disponible
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Instalar dependencias de Laravel y optimizar la carga automática
+# Instalar dependencias de Laravel y optimizar
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# Instalar dependencias de NPM y construir los assets
+# Reinstalar y limpiar cache de NPM
+RUN npm cache clean -f && npm install -g npm@latest
+
+# Instalar dependencias de NPM y construir assets
 RUN npm install --production && npm run build && npm cache clean --force
 
-# Asegurar permisos adecuados en Laravel
+# Asegurar permisos en Laravel
 RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache
 
-# Configurar Laravel (caché de config, rutas y vistas)
+# Configurar Laravel
 RUN php artisan optimize && \
     php artisan config:cache && \
     php artisan route:cache && \
