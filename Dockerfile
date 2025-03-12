@@ -17,11 +17,14 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-enable mongodb pdo_mysql \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Instalar Node.js y NPM desde NodeSource
+# Instalar Node.js desde NodeSource
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
-    && apt-get install -y nodejs && \
-    ln -s /usr/bin/node /usr/local/bin/node && \
-    ln -s /usr/bin/npm /usr/local/bin/npm
+    && apt-get install -y nodejs
+
+# Agregar rutas de NPM y Node.js manualmente
+ENV PATH /usr/local/lib/nodejs/bin:$PATH
+RUN ln -s /usr/bin/node /usr/local/bin/node
+RUN ln -s /usr/bin/npm /usr/local/bin/npm
 
 # Verificar versiones instaladas
 RUN node -v && npm -v
@@ -32,14 +35,14 @@ WORKDIR /app
 # Copiar archivos del proyecto
 COPY . .
 
-# Instalar Composer manualmente si no está disponible
+# Instalar Composer manualmente
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Instalar dependencias de Laravel y optimizar
+# Instalar dependencias de Laravel
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# Reinstalar y limpiar cache de NPM
-RUN npm cache clean -f && npm install -g npm@latest
+# Limpiar caché de NPM antes de instalar paquetes
+RUN npm cache clean -f
 
 # Instalar dependencias de NPM y construir assets
 RUN npm install --production && npm run build && npm cache clean --force
