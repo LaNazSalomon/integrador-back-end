@@ -46,3 +46,9 @@ Route::middleware('jwt.auth')->group(function () {
     //Route::put('/customer/update/{id}', [CustomerController::class, 'update']);
     Route::post('customers/create',[CustomerController::class, 'create']);
 });
+
+Route::get('/test-db', function () {
+    return response()->json([
+        'users' => \DB::table('users')->count()
+    ]);
+});
