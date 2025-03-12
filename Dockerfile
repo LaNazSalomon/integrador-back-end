@@ -10,7 +10,6 @@ RUN apt-get update && apt-get install -y \
     git \
     nodejs \
     npm \
-    && pecl channel-update pecl.php.net \
     && pecl install mongodb \
     && docker-php-ext-enable mongodb
 
@@ -22,18 +21,17 @@ COPY . .
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Instalar dependencias de Laravel y NPM
-RUN composer install --no-dev --optimize-autoloader
-RUN npm install --production
+RUN composer install --no-dev --optimize-autoloader --no-interaction
+RUN npm install --production && npm run build && npm cache clean --force
 
-# Configurar Laravel (caché y migraciones)
-RUN php artisan optimize
-RUN php artisan config:cache
-RUN php artisan route:cache
-RUN php artisan view:cache
-RUN php artisan migrate --force
+# Configurar Laravel (caché de config, rutas y vistas)
+RUN php artisan optimize && \
+    php artisan config:cache && \
+    php artisan route:cache && \
+    php artisan view:cache
 
 # Exponer el puerto de PHP
 EXPOSE 9000
 
-# Comando para iniciar PHP
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=9000"]
+# Comando para iniciar PHP (incluye migraciones)
+CMD ["sh", "-c", "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=9000"]
