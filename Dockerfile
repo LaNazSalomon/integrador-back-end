@@ -1,15 +1,15 @@
 # Usa PHP 8.2 como imagen base
 FROM php:8.2-cli
 
-# Instalar dependencias necesarias
+# Instalar dependencias necesarias y Node.js desde NodeSource
 RUN apt-get update && apt-get install -y \
     libssl-dev \
     pkg-config \
     unzip \
     curl \
     git \
-    nodejs \
-    npm \
+    && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs \
     && pecl install mongodb \
     && docker-php-ext-enable mongodb
 
@@ -22,6 +22,10 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 # Instalar dependencias de Laravel y NPM
 RUN composer install --no-dev --optimize-autoloader --no-interaction
+
+# Opcional: Verificar versión de npm
+RUN npm -v
+
 RUN npm install --production && npm run build && npm cache clean --force
 
 # Configurar Laravel (caché de config, rutas y vistas)
