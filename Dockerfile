@@ -1,32 +1,34 @@
-# Usa PHP 8.2 como imagen base
+# Etapa de build: se instala Node.js y se genera el build del frontend
+FROM node:18 AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+
+# Etapa de producción: se usa PHP para la aplicación Laravel
 FROM php:8.2-cli
 
-# Instalar dependencias necesarias y Node.js desde NodeSource
+# Instalar dependencias necesarias para PHP
 RUN apt-get update && apt-get install -y \
     libssl-dev \
     pkg-config \
     unzip \
     curl \
     git \
-    && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
-    && apt-get install -y nodejs \
     && pecl install mongodb \
     && docker-php-ext-enable mongodb
 
-# Configurar el directorio de trabajo
 WORKDIR /app
 COPY . .
-
 # Instalar Composer manualmente si no está disponible
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Instalar dependencias de Laravel y NPM
+# Instalar dependencias de Laravel
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# Opcional: Verificar versión de npm
-RUN npm -v
-
-RUN npm install --production && npm run build && npm cache clean --force
+# Copiar el build generado desde la etapa anterior (ajusta la ruta según tu proyecto)
+COPY --from=builder /app/public ./public
 
 # Configurar Laravel (caché de config, rutas y vistas)
 RUN php artisan optimize && \
