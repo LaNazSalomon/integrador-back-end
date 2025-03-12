@@ -8,5 +8,5 @@ return [
     'allowed_headers' => ['*'], // Permite todos los headers
     'exposed_headers' => [],
     'max_age' => 0,
-    'supports_credentials' => true, // Ponlo en true si necesitas enviar cookies
+    'supports_credentials' => false, // Ponlo en true si necesitas enviar cookies
 ];
