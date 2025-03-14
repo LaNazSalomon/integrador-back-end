@@ -10,7 +10,6 @@ RUN apt-get update && apt-get install -y \
     git \
     nodejs \
     npm \
-    && docker-php-ext-install pdo_mysql \
     && pecl channel-update pecl.php.net \
     && pecl install mongodb \
     && docker-php-ext-enable mongodb
@@ -31,15 +30,10 @@ RUN php artisan optimize
 RUN php artisan config:cache
 RUN php artisan route:cache
 RUN php artisan view:cache
+RUN php artisan migrate --force
 
-# Ejecutar migraciones manualmente para evitar errores
-RUN php artisan migrate --force || true
+# Exponer el puerto de PHP
+EXPOSE 9000
 
-# Crear symlink para almacenamiento
-RUN php artisan storage:link
-
-# Exponer el puerto de PHP (Railway lo asigna dinámicamente, pero 8080 es común)
-EXPOSE 8080
-
-# Comando para iniciar PHP en el puerto 8080
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8080"]
+# Comando para iniciar PHP
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=9000"]
