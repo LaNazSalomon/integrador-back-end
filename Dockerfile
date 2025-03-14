@@ -6,12 +6,11 @@ RUN apt-get update && apt-get install -y \
     unzip \
     curl \
     git \
-    libpdo-mysql \
+    libpdo-mysql-dev \
     && pecl channel-update pecl.php.net \
     && pecl install mongodb \
-    && docker-php-ext-enable mongodb
-
-RUN docker-php-ext-install pdo pdo_mysql
+    && docker-php-ext-enable mongodb \
+    && docker-php-ext-install pdo pdo_mysql
 
 WORKDIR /app
 COPY . .
