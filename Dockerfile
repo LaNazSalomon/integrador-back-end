@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
     git \
     nodejs \
     npm \
+    && docker-php-ext-install pdo_mysql \
     && pecl channel-update pecl.php.net \
     && pecl install mongodb \
     && docker-php-ext-enable mongodb
