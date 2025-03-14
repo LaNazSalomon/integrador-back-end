@@ -35,4 +35,4 @@ RUN php artisan view:cache
 EXPOSE 9000
 
 # Comando para iniciar PHP
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=9000"]
+CMD ["php", "artisan", "serve", "--port=9000"]
