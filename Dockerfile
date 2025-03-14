@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     curl \
     git \
-    libmysqlclient-dev \
+    libmariadb-dev \
     && pecl channel-update pecl.php.net \
     && pecl install mongodb \
     && docker-php-ext-enable mongodb \
