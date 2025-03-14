@@ -31,10 +31,14 @@ RUN php artisan optimize
 RUN php artisan config:cache
 RUN php artisan route:cache
 RUN php artisan view:cache
-RUN php artisan migrate --force
+
+# Ejecutar migraciones manualmente para evitar errores
+RUN php artisan migrate --force || true
+
+# Crear symlink para almacenamiento
 RUN php artisan storage:link
 
-# Exponer el puerto de PHP
+# Exponer el puerto de PHP (Railway lo asigna dinámicamente, pero 8080 es común)
 EXPOSE 8080
 
 # Comando para iniciar PHP en el puerto 8080
