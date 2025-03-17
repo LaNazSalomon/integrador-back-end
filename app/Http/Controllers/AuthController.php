@@ -93,7 +93,7 @@ class AuthController extends Controller
             JWTAuth::invalidate($token);
             return response()->json(['message' => 'Sesion cerrada correctamente']);
         } catch (JWTException $e) {
-            return response()->json(['error' => 'Token invalido ' . $e], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json(['error' => 'Token invalido '], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         //Nos falta la parte de refescar token, esto lo haremos mas adelante, si nos da

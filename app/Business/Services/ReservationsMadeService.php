@@ -3,82 +3,92 @@
 namespace App\Business\Services;
 
 use App\Business\Interfaces\DatesInterface;
-use App\Models\ReservationDetail;
+use App\Models\Reservation;
 use App\Models\Room;
 use Carbon\CarbonPeriod;
 
 class ReservationsMadeService implements DatesInterface
 {
+
+    // Esta función genera todas las fechas ocupadas entre check-in y check-out
     public function BusyDays($check_in, $check_out): array
     {
-        //Declararemos una variable donde almacenar fechas
-        //sera un arreglo
         $dates = [];
-
         $period = CarbonPeriod::create($check_in, $check_out);
         foreach ($period as $date) {
             $dates[] = $date->format('Y-m-d');
         }
-
         return $dates;
     }
 
-    //En dates recibimos las fechas de entrada y salida
-    //En type recibimos el tipo de habitacion
-    //En hotel_id recibimos el ID del hotel donde pensamos hacer la reservacion
+    // Busca habitaciones disponibles en un hotel basándose en fechas y tipo de habitación
     public function BusyDates($type, $dates, $hotel_id)
     {
-        //Crearemos una funcion que recibira el tipo de habitacion que es esta buscando
-        //Obtendremos sus IDs
+        // Obtener los IDs de las habitaciones del tipo especificado en el hotel
         $rooms = $this->idOfTypes($type, $hotel_id);
+        // Si no hay habitaciones de ese tipo, devolvemos "sin existencias"
+        if (empty($rooms)) {
+            return ['Sin existencias'];
+        }
 
-        //Calculamos las fechas en las que estaremos hospedados
-        $this->BusyDays($dates[0], $dates[1]);
-
-
-        //Si hay una habitacion de este tipo disponible pues hacemos la reserva ahi
-        $idsHotelsAvailable = $this->findIDs($rooms, $hotel_id, $dates);
-        //Devolvemos un arreglo con todas los IDs de las habitaciones disponibles
-        return $idsHotelsAvailable;
+        // Obtener las habitaciones disponibles
+        return $this->findIDs($rooms, $dates);
     }
 
-
-    //Vamos a devolver todas las habitaciones de el tipo que esta buscando el usuaro dentro
-    //de el hotel en el que esta
-    private function idOfTypes($type, $idHotel)
+    // Devuelve los IDs de las habitaciones de cierto tipo en un hotel
+    private function idOfTypes($type, $idHotel): array
     {
-        $rooms = Room::where('type', $type)
+        return Room::where('type', $type)
             ->where('hotel_id', $idHotel)
             ->pluck('id')
-            ->flatten()
             ->toArray();
-
-
-        return !empty($rooms) ? $rooms : null;
     }
 
-    //Buscaremos en la DB NoSQL todos los IDs de las habitaciones que estamos buscando
-    //Si alguna no esta, reservaremos esa
-    //y si esta reservada pero los dias no coinciden con los que necesitamos tambien
-    private function findIDs($ids, $idHotel, $dates): array
+    // Busca habitaciones disponibles comparando con las fechas ocupadas
+    private function findIDs(array $roomIDs, array $requestedDates): array | string
     {
-        //Si IDs es null no vale la pena seguir buscando porque es obvio que no tenemos de esas habitaciones
-        if(empty($ids)){
-            return [0 => 'Sin existencias'];
+        // Obtener todas las fechas ocupadas en las habitaciones de este tipo
+        $occupiedDates = $this->datesOfRooms($roomIDs);
+
+        //Si occupiedDates esta vacio o null eso significa que todas las habitaciones estan disponibles
+        if(empty($occupiedDates)){
+            return $roomIDs;
         }
-        //Obtenemos todas las habitaciones del mismo tipo que estan ocupadas
-        $OccupiedRooms = ReservationDetail::where('hotel_id', $idHotel)
-            ->whereIn('rooms', $ids)
-            ->where('busy_days', 'elemMatch', ['$in' => $dates])
-            ->pluck('rooms')
-            ->flatten() //Esto unificara mas arreglos para no hacer subArregkis [[1,2],[3,2]] =>[1,2,3,2]
-            ->unique()
-            ->toArray();
+        //Sacaremos los valores en caso de haber, todos los IDs de roomIDs que no esten en occupiedDates
+        $idsRoomsAviables = array_diff($roomIDs, array_keys($occupiedDates));
+        //Si hay habitaciones no reservadas las regresamos automaticamente
+        if(!empty($idsRoomsAviables)){
+            return $idsRoomsAviables;
+        }
 
-        //Habitacviones deispobles
-        $availableRooms = array_diff($ids, $OccupiedRooms);
+        // Filtrar habitaciones que NO tengan intersección de fechas
+        foreach ($occupiedDates as $roomID => $dates) {
+            //Verificamos que no haya insercciones
+            //Inserciiones con las fechas solicitadas y las ocuopadas
+            if (empty(array_intersect($dates, $requestedDates))) {
+                return $roomID;
+            }
+        }
 
-        //Solo regresamos la primera
-        return !empty($availableRooms) ? $availableRooms : null;
+        return 'Sin disponibilidad';
+    }
+
+    // Devuelve un array con los IDs de habitaciones como llaves y sus fechas ocupadas como valores
+    private function datesOfRooms(array $roomIDs): array
+    {
+        $allDates = [];
+        $dates = Reservation::whereIn('room_id', $roomIDs)
+            ->select('room_id', 'check_in', 'check_out')
+            ->orderBy('room_id')
+            ->get();
+
+
+        foreach ($dates as $reservation) {
+            $allDates[$reservation->room_id] = array_merge(
+                $allDates[$reservation->room_id] ?? [],
+                $this->BusyDays($reservation->check_in, $reservation->check_out)
+            );
+        }
+        return $allDates;
     }
 }

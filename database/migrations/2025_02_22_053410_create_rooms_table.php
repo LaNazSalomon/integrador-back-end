@@ -13,14 +13,16 @@ return new class extends Migration
     {
         Schema::create('rooms', function (Blueprint $table) {
             $table->id();
-            $table -> unsignedBigInteger('hotel_id') -> nullable();
+            $table->unsignedBigInteger('hotel_id')->nullable();
             $table->foreign('hotel_id')
-            -> references('id') -> on('hotels')
-            -> onDelete('set null');
+                ->references('id')->on('hotels')
+                ->onDelete('cascade');
             $table->string('number');
             $table->string('type');
             $table->decimal('price', 8, 2);
             $table->string('status');
+            $table->string('description')
+                ->nullable();
             $table->timestamps();
         });
     }
@@ -30,9 +32,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('rooms', function(Blueprint $table){
-            $table -> dropForeign('hotel_id');
-            $table -> dropColumn('hotel_id');
+        Schema::table('rooms', function (Blueprint $table) {
+            $table->dropForeign('hotel_id');
+            $table->dropColumn('hotel_id');
         });
     }
 };

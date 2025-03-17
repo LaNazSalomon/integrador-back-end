@@ -23,6 +23,7 @@ class ReservationFindRoomRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'hotel_id',
             'check_in' => [
                 'required',
                 'date',
