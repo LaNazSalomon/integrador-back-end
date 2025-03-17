@@ -13,15 +13,14 @@ return new class extends Migration
     {
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
-            $table -> unsignedBigInteger('cliente_id')-> nullable();
-            $table->foreign('cliente_id')
-            -> references('id') -> on ('customers');
-            $table -> unsignedBigInteger('room_id') -> nullable();
-            $table->foreign('room_id')
-            -> references('id') -> on('rooms');
             $table->date('check_in');
             $table->date('check_out');
+            $table->string('status');
+            $table->string('payment_method');
+            $table->integer('people_count');
             $table->timestamps();
+
+
         });
     }
 
@@ -31,10 +30,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('reservations', function(Blueprint $table){
-            $table -> dropForeign('cliente_id');
-            $table -> dropForeign('room_id');
-            $table -> dropColumn('cliente_id');
-            $table -> dropColumn('room_id');
+            Schema::dropIfExists('reservations');
 
         });
     }

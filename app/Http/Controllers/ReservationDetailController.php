@@ -58,23 +58,9 @@ class ReservationDetailController extends Controller
     }
 
 
-    //TODO: Esto va muy probablemente en Rooms
-    //Vamos a buscar el tipo de habitacion solicitado para devolver todas aquellas habitaciones
-    //Disponibles en las fechas solicitadas
+
     //TODO: HacerRequest personalizado para esta parte
     public function findRoomInReservations(ReservationFindRoomRequest $request){
-       try{
 
-        $dates = $this->dates->BusyDays($request->input('check_in'),$request->input('check_out'));
-        $ids = $this->dates->BusyDates($request->input('type'),$dates,$request->input('hotel_id'));
-
-        $numbersOfRoms = Room::whereIn('id', $ids)
-        ->pluck('number')
-        ->toArray();
-
-        return response() -> json(['numbers' => $numbersOfRoms],Response::HTTP_OK);
-       }catch(Exception $e){
-        return response() ->json(['error' => 'Algo no salio bien '.$e],Response::HTTP_BAD_REQUEST);
-       }
     }
 }

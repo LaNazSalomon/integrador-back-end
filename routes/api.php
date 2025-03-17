@@ -5,9 +5,9 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\HotelController;
+use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ReservationDetailController;
 use App\Http\Controllers\RoomController;
-use App\Models\Reservation;
 use Illuminate\Support\Facades\Route;
 
 //Ruta para registrarse en la pagina y tambien la de inicio de sesion
@@ -32,10 +32,10 @@ Route::middleware('jwt.auth')->group(function () {
 
 
     //Administracion de las reservas
-    Route::apiResource('reservations', ReservationDetailController::class);
+    Route::apiResource('reservations', ReservationController::class);
     //Funcion para buscar por tipo de habitacion pero en las reservas, esto para
     //Saber que habitaciones podemos usar
-    Route::post('reservation/find-room',[ReservationDetailController::class,'findRoomInReservations']);
+    Route::post('reservation/find-room',[ReservationController::class,'findRoomInReservations']);
 
     //Administracion de los huespedes
     Route::apiResource('customercustom', CustomerController::class);

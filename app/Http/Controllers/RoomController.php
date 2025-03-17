@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\RoomRequest;
 use App\Http\Requests\UpdateRoomRequest;
-use App\Models\Hotel;
 use App\Models\Room;
 use Dotenv\Exception\ValidationException;
 use Exception;
@@ -65,9 +64,12 @@ class RoomController extends Controller
     }
 
     //Funcion para obtener una sola habitacion
+    //Minetras este en nuestro hotel
     public function getRoom($id){
-        $room = Room::where('id', $id)
-        ->get();
+        $room = Room::join('hotels'. 'rooms.hotel_id', '=', 'hotels.id')
+        ->where('hotels.user_id', auth() -> id())
+        ->where('id', $id)
+        ->get(['rooms:*']);
 
         return response() -> json($room);
     }
