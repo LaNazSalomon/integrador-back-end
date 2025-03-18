@@ -29,6 +29,8 @@ class ReservationRequest extends ApiFormRequest
             'status' => 'required|string|in:pending,confirmed,canceled,finalized',
             'payment_method' => 'required|string|in:credit_card,debit_card,paypal',
             'people_count' => 'required|integer|min:1',
+            'total' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/' // Campo total con hasta dos decimales
+
         ];
     }
 
@@ -37,20 +39,30 @@ class ReservationRequest extends ApiFormRequest
         return [
             'hotel_id.required' => 'El campo de hotel es obligatorio.',
             'hotel_id.exists' => 'El hotel no existe en nuestra base de datos.',
+
             'customer_id.required' => 'El campo de cliente es obligatorio.',
             'customer_id.exists' => 'El cliente no existe en nuestra base de datos.',
+
             'room_id.required' => 'El campo de habitaciones es obligatorio.',
             'room_id.exists' => 'La habitacion no existe en nuestra base de datos.',
+
             'check_in.required' => 'La fecha de check-in es obligatoria.',
             'check_in.after' => 'La fecha de check-in debe ser posterior a la fecha de reserva.',
             'check_out.required' => 'La fecha de check-out es obligatoria.',
             'check_out.after' => 'La fecha de check-out debe ser posterior a la fecha de check-in.',
+
             'status.required' => 'El estado es obligatorio.',
             'status.in' => 'El estado debe ser uno de los siguientes: pending, confirmed, canceled.',
+
             'payment_method.required' => 'El método de pago es obligatorio.',
             'payment_method.in' => 'El método de pago debe ser uno de los siguientes: credit_card, debit_card, paypal.',
             'people_count.required' => 'El número de personas es obligatorio.',
             'people_count.min' => 'El número de personas debe ser al menos 1.',
+
+            'total.required' => 'El total es obligatorio.', // Mensaje de error para total
+            'total.numeric' => 'El total debe ser un número.',
+            'total.min' => 'El total no puede ser un valor negativo.',
+            'total.regex' => 'El total debe tener máximo dos decimales.',
         ];
     }
 }

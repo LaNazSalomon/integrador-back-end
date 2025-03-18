@@ -47,6 +47,7 @@ class ReservationsMadeService implements DatesInterface
     // Busca habitaciones disponibles comparando con las fechas ocupadas
     private function findIDs(array $roomIDs, array $requestedDates): array | string
     {
+        $roomsArray = [];
         // Obtener todas las fechas ocupadas en las habitaciones de este tipo
         $occupiedDates = $this->datesOfRooms($roomIDs);
 
@@ -66,11 +67,11 @@ class ReservationsMadeService implements DatesInterface
             //Verificamos que no haya insercciones
             //Inserciiones con las fechas solicitadas y las ocuopadas
             if (empty(array_intersect($dates, $requestedDates))) {
-                return $roomID;
+                $roomsArray[] = $roomID;
             }
         }
 
-        return 'Sin disponibilidad';
+        return !empty($roomsArray) ? $roomsArray : 'Sin disponibilidad';
     }
 
     // Devuelve un array con los IDs de habitaciones como llaves y sus fechas ocupadas como valores

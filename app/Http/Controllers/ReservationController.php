@@ -24,7 +24,8 @@ class ReservationController extends Controller
             $reservas = Reservation::join('hotels', 'reservations.hotel_id', '=', 'hotels.id')
                 ->where('hotels.user_id', auth()->id())
                 ->where('hotels.id', $hotelID)
-                ->get(['reservations.*']);
+                ->select('reservations.check_in','reservations.check_out', 'reservations.status','reservations.people_count')
+                ->get();
 
             return response()->json($reservas, Response::HTTP_OK);
         } catch (Exception) {
@@ -33,6 +34,7 @@ class ReservationController extends Controller
     }
 
     //En esta parte crearesmo una reserva
+    //TODO: Agregar soporte para el total (Cantidad a pagar en la reserva)
     public function store(ReservationRequest $request)
     {
 
