@@ -66,10 +66,11 @@ class RoomController extends Controller
     //Funcion para obtener una sola habitacion
     //Minetras este en nuestro hotel
     public function getRoom($id){
-        $room = Room::join('hotels'. 'rooms.hotel_id', '=', 'hotels.id')
+        $room = Room::join('hotels','rooms.hotel_id', '=', 'hotels.id')
         ->where('hotels.user_id', auth() -> id())
-        ->where('id', $id)
-        ->get(['rooms:*']);
+        ->where('rooms.id', $id)
+        ->get(['rooms.*']);
+
 
         return response() -> json($room);
     }
