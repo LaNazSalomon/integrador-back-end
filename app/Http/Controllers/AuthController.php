@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginUserRequest;
-use App\Http\Requests\ResgisterUserRequest;
+use App\Http\Requests\RegisterUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -16,7 +16,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 //implementando jwt
 class AuthController extends Controller
 {
-    public function register(ResgisterUserRequest $request)
+    public function register(RegisterUserRequest $request)
     {
         $datosValidados = $request->validated();
 
@@ -47,8 +47,8 @@ class AuthController extends Controller
             if (!$token = JWTAuth::attempt($credenciales)) {
                 return response()->json(['error' => 'El correo o la contraseña son invalidos'], Response::HTTP_UNAUTHORIZED);
             }
-        } catch (JWTException) {
-            return response()->json(['message' => 'No se pudo validar el token'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        } catch (JWTException $e) {
+            return response()->json(['message' => 'No se pudo validar el token: '.$e], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         //Si se logro crear el token es que no quedo dentro del if ni genero algun erro para ser
