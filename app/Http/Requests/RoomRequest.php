@@ -25,7 +25,7 @@ class RoomRequest extends ApiFormRequest
             'number' => 'required|integer|min:1|unique:rooms,number,NULL,id,hotel_id,' . $this->hotel_id,
             'type' => 'required|string|in:single,double,suite,premium,deluxe,executive,family,king,queen,studio,villa,penthouse',
             'price' => 'required|numeric|min:0',
-            'status' => 'required|string|in:available,occupied,maintenance',
+            'status' => 'required|string|in:Disponible,Ocupada,Mantenimiento',
             'description' => 'string|min:5'
         ];
     }

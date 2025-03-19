@@ -84,4 +84,17 @@ class RoomController extends Controller
 
         return response() -> json(['types' => $types]);
     }
+
+    public function destroy($id){
+        $reservation = Room::find($id);
+
+        if(!$reservation){
+            return response() -> json(['error' => 'Habitacion no encontrada'], Response::HTTP_NOT_FOUND);
+        }
+
+        $reservation -> delete();
+
+        return response() -> json(['message' => 'Habitacion eliminada correctamente'],
+        Response::HTTP_OK);
+    }
 }
