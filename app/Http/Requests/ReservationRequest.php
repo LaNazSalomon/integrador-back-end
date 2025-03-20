@@ -26,8 +26,8 @@ class ReservationRequest extends ApiFormRequest
             'room_id' => 'required|min:1|exists:rooms,id',
             'check_in' => 'required|date|after:reservation_date',
             'check_out' => 'required|date|after:check_in',
-            'status' => 'required|string|in:pending,confirmed,canceled,finalized',
-            'payment_method' => 'required|string|in:credit_card,debit_card,paypal',
+            'status' => 'required|string|in:pendiente,confirmada,cancelada,finalizada',
+            'payment_method' => 'required|string|in:Tarjeta de Crédito,Tarjeta de Débito,PayPal',
             'people_count' => 'required|integer|min:1',
             'total' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/' // Campo total con hasta dos decimales
 
@@ -52,10 +52,10 @@ class ReservationRequest extends ApiFormRequest
             'check_out.after' => 'La fecha de check-out debe ser posterior a la fecha de check-in.',
 
             'status.required' => 'El estado es obligatorio.',
-            'status.in' => 'El estado debe ser uno de los siguientes: pending, confirmed, canceled.',
+            'status.in' => 'El estado debe ser uno de los siguientes: pendiente, confirmada, finalizada.',
 
             'payment_method.required' => 'El método de pago es obligatorio.',
-            'payment_method.in' => 'El método de pago debe ser uno de los siguientes: credit_card, debit_card, paypal.',
+            'payment_method.in' => 'El método de pago debe ser uno de los siguientes: Tarjeta de Crédito, Tarjeta de Débito, PayPal.',
             'people_count.required' => 'El número de personas es obligatorio.',
             'people_count.min' => 'El número de personas debe ser al menos 1.',
 

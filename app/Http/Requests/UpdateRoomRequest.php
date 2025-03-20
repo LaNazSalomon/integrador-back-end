@@ -37,9 +37,9 @@ class UpdateRoomRequest extends ApiFormRequest
                     ->ignore($roomId)
                 // Ignora la habitación que se está editando
             ],
-            'type' => 'required|string|in:single,double,suite,premium,deluxe,executive,family,king,queen,studio,villa,penthouse',
+            'type' => 'required|string|in:individual,doble,suite,premium,deluxe,ejecutiva,familiar,king,queen,estudio,villa,penthouse',
             'price' => 'required|numeric|min:0',
-            'status' => 'required|string|in:available,occupied,maintenance',
+            'status' => 'required|string|in:Disponible,Ocupada,Mantenimiento',
             'description' => 'string|min:5|nullable'
         ];
     }
@@ -57,7 +57,7 @@ class UpdateRoomRequest extends ApiFormRequest
 
             'type.required' => 'El tipo de habitación es obligatorio.',
             'type.string' => 'El tipo de habitación debe ser una cadena de texto.',
-            'type.in' => 'El tipo de habitación debe ser uno de los siguientes: single, double, suite, premium, deluxe, executive, family, king, queen, studio, villa, penthouse.',
+            'type.in' => 'El tipo de habitación debe ser uno de los siguientes: individual, doble, suite, premium, deluxe, ejecutiva, familiar, king, queen, estudio, villa, penthouse.',
 
             'price.required' => 'El precio es obligatorio.',
             'price.numeric' => 'El precio debe ser un número.',
@@ -65,7 +65,7 @@ class UpdateRoomRequest extends ApiFormRequest
 
             'status.required' => 'El estado de la habitación es obligatorio.',
             'status.string' => 'El estado debe ser una cadena de texto.',
-            'status.in' => 'El estado debe ser uno de los siguientes: available, occupied, maintenance.',
+            'status.in' => 'El estado debe ser uno de los siguientes: disponible, ocupada, mantenimiento.',
 
             'description.string' => 'La descripción debe ser una cadena de texto.',
             'description.min' => 'La descripción debe ser de un mínimo de 5 caracteres.',

@@ -28,7 +28,7 @@ class ReservationFindRoomRequest extends FormRequest
                 'required',
                 'date',
                 'date_format:Y-m-d',
-                'after_or_equal:' . now()->addDays(3)->toDateString(), // Mínimo 3 días después de hoy
+                'after_or_equal:' . now()->addDays(1)->toDateString(), // Mínimo 3 días después de hoy
             ],
             'check_out' => [
                 'required',
@@ -40,16 +40,16 @@ class ReservationFindRoomRequest extends FormRequest
                 'required',
                 'string',
                 Rule::in([
-                    'single',
-                    'double',
+                    'individual',
+                    'doble',
                     'suite',
                     'premium',
                     'deluxe',
-                    'executive',
-                    'family',
+                    'ejecutiva',
+                    'familiar',
                     'king',
                     'queen',
-                    'studio',
+                    'estudio',
                     'villa',
                     'penthouse'
                 ]),
