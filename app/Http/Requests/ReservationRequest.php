@@ -46,10 +46,10 @@ class ReservationRequest extends ApiFormRequest
             'room_id.required' => 'El campo de habitaciones es obligatorio.',
             'room_id.exists' => 'La habitacion no existe en nuestra base de datos.',
 
-            'check_in.required' => 'La fecha de check-in es obligatoria.',
-            'check_in.after' => 'La fecha de check-in debe ser posterior a la fecha de reserva.',
-            'check_out.required' => 'La fecha de check-out es obligatoria.',
-            'check_out.after' => 'La fecha de check-out debe ser posterior a la fecha de check-in.',
+            'check_in.required' => 'La fecha de entrada es obligatoria.',
+            'check_in.after' => 'La fecha de entrada debe ser posterior a la fecha de reserva.',
+            'check_out.required' => 'La fecha de salida es obligatoria.',
+            'check_out.after' => 'La fecha de salida debe ser posterior a la fecha de entrada.',
 
             'status.required' => 'El estado es obligatorio.',
             'status.in' => 'El estado debe ser uno de los siguientes: pendiente, confirmada, finalizada.',

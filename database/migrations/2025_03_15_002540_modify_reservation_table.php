@@ -31,6 +31,11 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('reservations', function (Blueprint $table) {
+            $table->dropForeign('hotel_id');
+            $table->dropForeign('customer_id');
+            $table->dropForeign('room_id');
+
+
             $table->dropColumn('hotel_id');
             $table->dropColumn('customer_id');
             $table->dropColumn('room_id');

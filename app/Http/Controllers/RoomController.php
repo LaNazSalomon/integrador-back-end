@@ -86,13 +86,13 @@ class RoomController extends Controller
     }
 
     public function destroy($id){
-        $reservation = Room::find($id);
+        $room = Room::find($id);
 
-        if(!$reservation){
+        if(!$room){
             return response() -> json(['error' => 'Habitacion no encontrada'], Response::HTTP_NOT_FOUND);
         }
 
-        $reservation -> delete();
+        $room -> delete();
 
         return response() -> json(['message' => 'Habitacion eliminada correctamente'],
         Response::HTTP_OK);

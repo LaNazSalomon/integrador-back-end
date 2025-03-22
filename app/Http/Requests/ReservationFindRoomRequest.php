@@ -60,13 +60,13 @@ class ReservationFindRoomRequest extends FormRequest
     public function messages()
     {
         return [
-            'check_in.required' => 'La fecha de check-in es obligatoria.',
-            'check_in.date' => 'El formato de la fecha de check-in no es válido.',
-            'check_in.after_or_equal' => 'La fecha de check-in debe ser al menos 3 días después de hoy.',
+            'check_in.required' => 'La fecha de entrada es obligatoria.',
+            'check_in.date' => 'El formato de la fecha de entrada no es válido.',
+            'check_in.after_or_equal' => 'La fecha de entrada debe ser al menos 3 días después de hoy.',
 
-            'check_out.required' => 'La fecha de check-out es obligatoria.',
+            'check_out.required' => 'La fecha de salida es obligatoria.',
             'check_out.date' => 'El formato de la fecha de check-out no es válido.',
-            'check_out.after' => 'La fecha de check-out debe ser al menos 1 día después del check-in.',
+            'check_out.after' => 'La fecha de salida debe ser al menos 1 día después de la de entrada.',
 
             'type.required' => 'El tipo de habitación es obligatorio.',
             'type.string' => 'El tipo de habitación debe ser una cadena de texto.',

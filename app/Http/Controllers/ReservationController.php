@@ -22,9 +22,24 @@ class ReservationController extends Controller
     {
         try {
             $reservas = Reservation::join('hotels', 'reservations.hotel_id', '=', 'hotels.id')
+                ->join('rooms', 'reservations.room_id', '=', 'rooms.id')
+                ->join('customers', 'reservations.customer_id', '=', 'customers.id')
                 ->where('hotels.user_id', auth()->id())
                 ->where('hotels.id', $hotelID)
-                ->select('reservations.check_in','reservations.check_out', 'reservations.status','reservations.people_count')
+                ->select(
+                    'reservations.id',
+                    'reservations.check_in',
+                    'reservations.check_out',
+                    'reservations.status',
+                    'reservations.people_count',
+                    'rooms.type',
+                    'rooms.status',
+                    'rooms.number',
+                    'rooms.description',
+                    'customers.name',
+                    'customers.last_name',
+                    'customers.email'
+                )
                 ->get();
 
             return response()->json($reservas, Response::HTTP_OK);
@@ -45,9 +60,9 @@ class ReservationController extends Controller
                 $request->validated()
             );
 
-            return response()->json(['message' => 'Reservacion exitosa'], Response::HTTP_CREATED);
+            return response()->json(['message' => 'Reservación exitosa.'], Response::HTTP_CREATED);
         } catch (Exception) {
-            return response()->json(['error' => 'Aglo no salio bien'], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json(['error' => 'Algo no salió bien.'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -63,7 +78,7 @@ class ReservationController extends Controller
         //Aqui obtendremos el ID de una habitacion desocupada o 'Sin disponibilidad' o 'Sin existencias'"
         $roomID = $this->business->BusyDates($request->input('type'), $dates, $request->input('hotel_id'));
 
-        if (!$roomID || $roomID === 'Sin disponibilidad' || $roomID === 'Sin existencias') {
+        if (!$roomID || $roomID === 'Sin disponibilidad' || $roomID === 'Sin existencias.') {
             return response()->json(['messages' => (string)$roomID], Response::HTTP_NO_CONTENT);
         }
 
@@ -74,5 +89,23 @@ class ReservationController extends Controller
         }
 
         return response()->json(['room' => $room], Response::HTTP_OK);
+    }
+
+    //Eliminaremos una reserva
+    public function destroy(int $id)
+    {
+        try {
+            $reservation = Reservation::find($id);
+
+            if (!$reservation) {
+                return response()->json(['message' => 'No se encontró ninguna reservación.'], Response::HTTP_NO_CONTENT);
+            }
+
+            $reservation->delete();
+
+            return response()->json(['message' => 'Reservación eliminada correctamente.'], Response::HTTP_OK);
+        } catch (Exception) {
+            return response()->json(['error' => 'Algo no salió como esperabas.'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 }
