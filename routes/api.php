@@ -4,15 +4,19 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\EmailController;
 use App\Http\Controllers\HotelController;
 use App\Http\Controllers\ReservationController;
-use App\Http\Controllers\ReservationDetailController;
 use App\Http\Controllers\RoomController;
 use Illuminate\Support\Facades\Route;
 
 //Ruta para registrarse en la pagina y tambien la de inicio de sesion
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
+Route::post('recovery-password',[EmailController::class, 'sendEmail']);
+Route::post('reset-password',[EmailController::class, 'resetPassword']);
+Route::put('update-password',[EmailController::class,'updatePassword']);
+
 
 //Este es un grupo que esta protegido con un middleware para que los usuarios que no tengan
 //Un token que es igual a una sesion iniciada no puedan entrar a estas rutas y obtener informacion
