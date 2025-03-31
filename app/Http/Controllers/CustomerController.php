@@ -74,4 +74,22 @@ class CustomerController extends Controller
             return response()->json(['error' => 'Ha ocurrido algo inesperado'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
+    //Funcion para la eliminacion de los clientes
+    public function destroy($id)
+    {
+        try {
+            $customer = Customer::find($id);
+
+            if (!$customer) {
+                return response()->json(['error' => 'No existe este cliente.'], Response::HTTP_NOT_FOUND);
+            }
+
+            $customer->delete();
+
+            return response()->json(['message' => 'Cliente eliminado correctamente.'], Response::HTTP_OK);
+        } catch (Exception) {
+            return response()->json(['error' => 'Algo salio mal']);
+        }
+    }
 }

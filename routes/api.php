@@ -40,6 +40,8 @@ Route::middleware('jwt.auth')->group(function () {
     //Funcion para buscar por tipo de habitacion pero en las reservas, esto para
     //Saber que habitaciones podemos usar
     Route::post('reservation/find-room',[ReservationController::class,'findRoomInReservations']);
+    //Esta ruta sirve para obtener el total de reservacviones que tenemos en un hotel
+    Route::get('get-all-reservations/{hotel}',[ReservationController::class, 'getAllReservations']);
 
     //Administracion de los huespedes
     Route::apiResource('customercustom', CustomerController::class);

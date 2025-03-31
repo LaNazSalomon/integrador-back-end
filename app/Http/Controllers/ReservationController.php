@@ -16,6 +16,22 @@ class ReservationController extends Controller
     public function __construct(protected DatesInterface $business) {}
 
 
+    //Vamos a contar todas las reservas que tenemos en nuestro hotel
+    public function getAllReservations($hotel)
+    {
+        try
+        {
+            $reservations = Reservation::where('hotel_id', $hotel)
+        -> count();
+
+        return response() -> json(['count' =>(int) $reservations], Response::HTTP_OK);
+        }catch(Exception)
+        {
+            return response() -> json(['error' => 'Algo salio mal'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
     //Traemos todas las reservaciones mientras esten en el hotel indicado
     //Y el hotel indicado pertenezca a el usuario logeado
     public function show($hotelID)
